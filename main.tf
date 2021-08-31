@@ -2,7 +2,7 @@ module "vpc_for_ecs_fargate" {
   providers = {
     aws.current = aws.beta-east-1
   }
-  source = "./vpc"
+  source = "./modules/vpc"
   vpc_tag_name = "test-vpc"
   number_of_private_subnets = 2
   number_of_public_subnets = 2
