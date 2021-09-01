@@ -1,3 +1,38 @@
+resource "aws_vpc" "medium_vpc" {
+    provider = aws.current
+    cidr_block       = var.vpc_cidr_block
+    enable_dns_support = true
+    enable_dns_hostnames = true
+
+    tags = {
+        Name = "${var.vpc_tag_name}-vpc-${var.environment}"
+    }
+}
+
+resource "aws_subnet" "private_subnet" {
+    provider = aws.current
+    count = var.number_of_private_subnets
+    vpc_id = aws_vpc.medium_vpc.id
+    cidr_block = element(var.private_subnet_cidr_blocks, count.index)
+    availability_zone = element(var.availability_zones, count.index)
+
+    tags = {
+        Name = "${var.private_subnet_tag_name}-${var.environment}"
+    }
+}
+
+
+
+resource "aws_subnet" "public_subnet" {
+    provider = aws.current
+    count = var.number_of_public_subnets
+    vpc_id = aws_vpc.medium_vpc.id
+    cidr_block = element(var.public_subnet_cidr_blocks, count.index)
+    availability_zone = element(var.availability_zones, count.index)
+
+    tags = {
+        Name = "${var.public_subnet_tag_name}-${var.environment}"
+    }
 }
 # IGW
 resource "aws_internet_gateway" "admin" {

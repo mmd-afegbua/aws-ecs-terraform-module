@@ -1,4 +1,4 @@
-local {
+locals {
     cluster_name = "mmdafegbua"
     environment = "dev"
     #Image Name
