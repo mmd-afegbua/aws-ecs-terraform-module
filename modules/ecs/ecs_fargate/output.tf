@@ -11,7 +11,3 @@ output alb_dns_address {
 output "target_group_arn" {
   value = aws_lb_target_group.alb_tg.arn
 }
-output "s3_bucket_id" {
-    value   =   aws_s3_bucket.static.id
-    description =   "ID of s3 bucket"
-}

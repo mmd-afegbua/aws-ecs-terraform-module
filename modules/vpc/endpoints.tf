@@ -1,8 +1,7 @@
 # ECR
 resource "aws_vpc_endpoint" "ecr_dkr" {
-  provider = aws.current
 
-  vpc_id       = aws_vpc.centricity_vpc.id
+  vpc_id       = aws_vpc.main.id
   service_name = "com.amazonaws.${var.region}.ecr.dkr"
   vpc_endpoint_type = "Interface"
   private_dns_enabled = true
@@ -20,8 +19,7 @@ resource "aws_vpc_endpoint" "ecr_dkr" {
 
 # CloudWatch
 resource "aws_vpc_endpoint" "cloudwatch" {
-  provider = aws.current
-  vpc_id       = aws_vpc.centricity_vpc.id
+  vpc_id       = aws_vpc.main.id
   service_name = "com.amazonaws.${var.region}.logs"
   vpc_endpoint_type = "Interface"
   subnet_ids          = aws_subnet.private_subnet.*.id
@@ -39,8 +37,7 @@ resource "aws_vpc_endpoint" "cloudwatch" {
 
 # S3
 resource "aws_vpc_endpoint" "s3" {
-  provider = aws.current
-  vpc_id       = aws_vpc.centricity_vpc.id
+  vpc_id       = aws_vpc.main.id
   service_name = "com.amazonaws.${var.region}.s3"
   vpc_endpoint_type = "Gateway"
   route_table_ids = [aws_route_table.private_route[0].id]

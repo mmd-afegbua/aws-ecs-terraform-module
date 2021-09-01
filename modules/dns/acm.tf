@@ -1,5 +1,4 @@
-resource "aws_acm_certificate" "acm_certificate" {
-  provider = aws.current
+resource "aws_acm_certificate" "acm_certificate" 
   domain_name               = var.domain_name
   validation_method         = "DNS"
   tags = {
@@ -11,7 +10,6 @@ resource "aws_acm_certificate" "acm_certificate" {
 }
 
 resource "aws_acm_certificate_validation" "acm_certificate_validation" {
-    provider = aws.current
     certificate_arn = aws_acm_certificate.acm_certificate.arn
     validation_record_fqdns = [ "aws_route53_record.validation_route53_record.*.fqdn" ]
 }

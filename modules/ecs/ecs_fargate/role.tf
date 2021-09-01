@@ -1,5 +1,5 @@
 resource "aws_iam_role" "ecs_task_role" {
-    provider = aws.current
+    
     name = "ecs-task-${var.environment}-role"  
     assume_role_policy = <<EOF
 {
@@ -19,7 +19,7 @@ EOF
 }
 
 resource "aws_iam_role" "ecs_main_tasks" {
-    provider = aws.current
+    
     name = "ecs-main-tasks-${var.environment}-role"
     assume_role_policy = <<EOF
 {
@@ -39,7 +39,7 @@ EOF
 }
 
 resource "aws_iam_role_policy" "ecs_main_tasks" {
-      provider = aws.current
+      
       name = "ecs-main-tasks-${var.environment}-policy"
       role = aws_iam_role.ecs_main_tasks.id
 
@@ -78,7 +78,7 @@ EOF
 }
 
 resource "aws_iam_role_policy" "ecs_tasks" {
-      provider = aws.current
+      
       name = "ecs-tasks-role-${var.environment}-policy"
       role = aws_iam_role.ecs_task_role.id
 
