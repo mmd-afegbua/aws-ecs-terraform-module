@@ -1,17 +1,14 @@
 resource "aws_api_gateway_rest_api" "admin_tool" {
-    provider = aws.current
     name = "api-gateway-${var.cluster_name}"
 }
 
 resource "aws_api_gateway_resource" "admin_tool" {
-    provider = aws.current
     rest_api_id = aws_api_gateway_rest_api.admin_tool.id
     parent_id = aws_api_gateway_rest_api.admin_tool.root_resource_id  
     path_part = var.path_part
 }
 
 resource "aws_api_gateway_method" "admin_tool" {
-    provider = aws.current
     rest_api_id = aws_api_gateway_rest_api.admin_tool.id
     resource_id =  aws_api_gateway_resource.admin_tool.id
     http_method = "ANY"
@@ -23,7 +20,6 @@ resource "aws_api_gateway_method" "admin_tool" {
 }
 
 resource "aws_api_gateway_integration" "admin_tool" {
-    provider = aws.current
     rest_api_id = aws_api_gateway_rest_api.admin_tool.id
     resource_id = aws_api_gateway_resource.admin_tool.id  
     http_method = aws_api_gateway_method.admin_tool.http_method
@@ -40,7 +36,6 @@ resource "aws_api_gateway_integration" "admin_tool" {
 }
 
 resource "aws_api_gateway_deployment" "admin_tool" {
-    provider = aws.current
     rest_api_id = aws_api_gateway_rest_api.admin_tool.id
     stage_name = "${var.environment}-env"
 
@@ -56,8 +51,7 @@ resource "aws_api_gateway_deployment" "admin_tool" {
     }
 }
 
-resource "aws_api_gateway_vpc_link" "admin_tool" {
-  provider = aws.current
+resource "aws_api_gateway_vpc_link" "admin_tool" 
   name = "vpc-link-${var.cluster_name}"
   target_arns = [var.nlb_arn]
 }

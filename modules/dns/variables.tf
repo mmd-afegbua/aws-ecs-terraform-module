@@ -1,10 +1,10 @@
-provider "aws" {
-  alias = "current"
-}
+# provider "aws" {
+#   alias = "current"
+# }
 
-provider "aws" {
-  alias = "shared"
-}
+# provider "aws" {
+#   alias = "shared"
+# }
 
 variable "environment" {
   type = string

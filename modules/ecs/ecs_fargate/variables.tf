@@ -1,12 +1,12 @@
 #Provider Block
 
-provider "aws" {
-  alias = "current"
-}
+# provider "aws" {
+#   alias = "current"
+# }
 
-provider "aws" {
-  alias = "shared"
-}
+# provider "aws" {
+#   alias = "shared"
+# }
 
 variable "enable_lb_deletion" {
   type = bool
@@ -188,6 +188,7 @@ variable "force_destroy" {
 variable "bucket_name" {
     type    =   string
     description =   "name of bucket"
+    default = ""
 }
 variable "region" {
     type    = string

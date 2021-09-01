@@ -1,7 +1,4 @@
 module "vpc_for_ecs_fargate" {
-  providers = {
-    aws.current = aws.beta-east-1
-  }
   source = "./modules/vpc"
   vpc_tag_name = "test-vpc"
   number_of_private_subnets = 2
@@ -18,9 +15,6 @@ module "vpc_for_ecs_fargate" {
 
 # ECS cluster
 module "ecs_cluster" {
-  providers = {
-    aws.current = aws.beta-east-1
-  }
   source = "./modules/ecs/ecs_cluster"
   cluster_name = local.cluster_name
   cluster_tag_name = "${local.cluster_name}-${local.environment}-cluster"
@@ -30,9 +24,6 @@ module "ecs_cluster" {
 # ECS task definition and service
 module "ecs_task_definition_and_service" {
   # Task definition and NLB
-  providers = {
-    aws.current = aws.beta-east-1
-  }
   source = "./modules/ecs/ecs_fargate"
   cluster_name = local.cluster_name
 
@@ -42,6 +33,7 @@ module "ecs_task_definition_and_service" {
   app_image = local.app_image
   app_port = local.app_port
   app_environment = local.environment
+  region = "us-east-1"
   alb_sg_group = module.vpc_for_ecs_fargate.alb_security_group_id
 
   #HTTPS
@@ -50,7 +42,7 @@ module "ecs_task_definition_and_service" {
 
   # Service
   cluster_id = module.ecs_cluster.cluster_id
-  app_count = var.app_count
+  app_count = 1
   aws_security_group_ecs_tasks_id = module.vpc_for_ecs_fargate.ecs_tasks_security_group_id
   public_subnet_ids = module.vpc_for_ecs_fargate.public_subnet_ids
   private_subnet_ids = module.vpc_for_ecs_fargate.private_subnet_ids
@@ -58,9 +50,7 @@ module "ecs_task_definition_and_service" {
 
 
 # module "main_tool_dns" {
-#   providers = {
-#     aws.current = aws.beta-east-1
-#    }
+
 #   source = "./modules/dns"
 #   environment = var.environment
 #   domain_name = ""
@@ -71,9 +61,6 @@ module "ecs_task_definition_and_service" {
 
 # API Gateway and VPC link
 # module "api_gateway" {
-  # providers = {
-  #   aws.current = aws.beta-east-1
-  # }
 #   source = "./modules/api_gateway"
 #   cluster_name = "${var.cluster_name}-${var.environment}"
 #   input_integration_type = "HTTP_PROXY"

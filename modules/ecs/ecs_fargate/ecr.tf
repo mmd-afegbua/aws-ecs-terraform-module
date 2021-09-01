@@ -1,5 +1,4 @@
 resource "aws_ecr_repository" "main" {
-provider = aws.current
 
 name = "${var.cluster_name}_${var.environment}"
 

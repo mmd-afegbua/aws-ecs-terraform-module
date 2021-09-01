@@ -1,5 +1,5 @@
 resource "aws_ecs_service" "main" {
-    provider = aws.current
+    
     name = "ecs-${var.cluster_name}-${var.environment}-service"  
     cluster = var.cluster_id
     task_definition = aws_ecs_task_definition.main.family
@@ -27,7 +27,7 @@ resource "aws_ecs_service" "main" {
 }
 
 resource "aws_appautoscaling_target" "centricity" {
-  provider = aws.current
+  
   max_capacity       = var.max_autoscaling
   min_capacity       = var.min_autoscaling
   resource_id        = "service/${var.cluster_name}-${var.environment}-cluster/${aws_ecs_service.main.name}"
@@ -38,7 +38,7 @@ resource "aws_appautoscaling_target" "centricity" {
 }
 
 resource "aws_appautoscaling_policy" "memory_util" {
-  provider = aws.current
+  
   name               = "${var.cluster_name}-${var.environment}-mem-autoscaling-policy"
   policy_type        = "TargetTrackingScaling"
   resource_id        = aws_appautoscaling_target.centricity.resource_id
@@ -60,7 +60,7 @@ resource "aws_appautoscaling_policy" "memory_util" {
 }
 
 resource "aws_appautoscaling_policy" "cpu_util" {
-  provider = aws.current
+  
   name               = "${var.cluster_name}-${var.environment}-cpu-autoscaling-policy"
   policy_type        = "TargetTrackingScaling"
   resource_id        = aws_appautoscaling_target.centricity.resource_id

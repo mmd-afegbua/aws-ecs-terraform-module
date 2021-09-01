@@ -1,5 +1,4 @@
 resource "aws_route53_record" "validation_route53_record" {
-  provider = aws.current
   for_each = {
     for dvo in aws_acm_certificate.acm_certificate.domain_validation_options : dvo.domain_name => {
       name   = dvo.resource_record_name

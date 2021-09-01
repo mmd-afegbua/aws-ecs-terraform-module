@@ -1,5 +1,4 @@
 resource "aws_ecs_task_definition" "main" {
-    provider = aws.current
     family = var.cluster_name
     task_role_arn = aws_iam_role.ecs_task_role.arn
     execution_role_arn = aws_iam_role.ecs_main_tasks.arn

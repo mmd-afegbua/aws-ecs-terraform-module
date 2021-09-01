@@ -1,5 +1,5 @@
-resource "aws_vpc" "medium_vpc" {
-    provider = aws.current
+resource "aws_vpc" "main" {
+    
     cidr_block       = var.vpc_cidr_block
     enable_dns_support = true
     enable_dns_hostnames = true
@@ -10,9 +10,9 @@ resource "aws_vpc" "medium_vpc" {
 }
 
 resource "aws_subnet" "private_subnet" {
-    provider = aws.current
+    
     count = var.number_of_private_subnets
-    vpc_id = aws_vpc.medium_vpc.id
+    vpc_id = aws_vpc.main.id
     cidr_block = element(var.private_subnet_cidr_blocks, count.index)
     availability_zone = element(var.availability_zones, count.index)
 
@@ -24,9 +24,9 @@ resource "aws_subnet" "private_subnet" {
 
 
 resource "aws_subnet" "public_subnet" {
-    provider = aws.current
+    
     count = var.number_of_public_subnets
-    vpc_id = aws_vpc.medium_vpc.id
+    vpc_id = aws_vpc.main.id
     cidr_block = element(var.public_subnet_cidr_blocks, count.index)
     availability_zone = element(var.availability_zones, count.index)
 
@@ -36,10 +36,10 @@ resource "aws_subnet" "public_subnet" {
 }
 # IGW
 resource "aws_internet_gateway" "admin" {
-    provider = aws.current
+    
     count = 1
 
-    vpc_id = aws_vpc.medium_vpc.id
+    vpc_id = aws_vpc.main.id
     tags = {
         Name = "${var.public_subnet_tag_name}-${var.environment}"
     }
@@ -48,10 +48,10 @@ resource "aws_internet_gateway" "admin" {
 
 # PUBLIC Route Table to IGW
 resource "aws_route_table" "public_route" {
-    provider = aws.current
+    
     count = 1
 
-    vpc_id = aws_vpc.medium_vpc.id
+    vpc_id = aws_vpc.main.id
 
     tags = {
         Name = "${var.public_subnet_tag_name}-${var.environment}"
@@ -60,7 +60,7 @@ resource "aws_route_table" "public_route" {
 }
 
 resource "aws_route" "public_internet_gateway" {
-  provider = aws.current
+  
   count = 1
 
   route_table_id         = aws_route_table.public_route[0].id
@@ -73,7 +73,7 @@ resource "aws_route" "public_internet_gateway" {
 }
 
 resource "aws_route_table_association" "public" {
-    provider = aws.current
+    
     count = var.number_of_public_subnets
     subnet_id       = element(aws_subnet.public_subnet.*.id, count.index)
     route_table_id  = aws_route_table.public_route[0].id
@@ -81,17 +81,17 @@ resource "aws_route_table_association" "public" {
 
 # Main Route table reconfiguration
 resource "aws_main_route_table_association" "admin" {
-    provider = aws.current  
-    vpc_id         = aws_vpc.medium_vpc.id
+      
+    vpc_id         = aws_vpc.main.id
     route_table_id = aws_route_table.public_route[0].id
 }
 
 # PRIVATE Route Table to IGW
 resource "aws_route_table" "private_route" {
-    provider = aws.current
+    
     count = 1
 
-    vpc_id = aws_vpc.medium_vpc.id
+    vpc_id = aws_vpc.main.id
 
     tags = {
         Name = "${var.private_subnet_tag_name}-${var.environment}"
@@ -99,7 +99,7 @@ resource "aws_route_table" "private_route" {
 }
 
 resource "aws_route_table_association" "private" {
-    provider = aws.current
+    
     count           = var.number_of_private_subnets
     subnet_id       = element(aws_subnet.private_subnet.*.id, count.index)
     route_table_id  = aws_route_table.private_route[0].id
@@ -108,7 +108,7 @@ resource "aws_route_table_association" "private" {
 # To NAT
 
 resource "aws_route" "nat_gateway" {
-    provider = aws.current
+    
     count                   = 1
     route_table_id          = element(aws_route_table.private_route.*.id, count.index)
     destination_cidr_block  = "0.0.0.0/0"
@@ -117,10 +117,10 @@ resource "aws_route" "nat_gateway" {
 
 
 resource "aws_security_group" "lb" {
-  provider = aws.current
+  
   name        = "${var.security_group_lb_name}-${var.environment}"
   description = var.security_group_lb_description
-  vpc_id      = aws_vpc.medium_vpc.id
+  vpc_id      = aws_vpc.main.id
 
   ingress {
     protocol    = "tcp"
@@ -159,10 +159,10 @@ resource "aws_security_group" "lb" {
 }
 
 resource "aws_security_group" "ecs_tasks" {
-  provider = aws.current
+  
   name        = "${var.security_group_ecs_tasks_name}-${var.environment}"
   description = var.security_group_ecs_tasks_description
-  vpc_id      = aws_vpc.medium_vpc.id
+  vpc_id      = aws_vpc.main.id
 
   ingress {
     protocol    = "tcp"

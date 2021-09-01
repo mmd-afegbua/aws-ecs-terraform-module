@@ -1,11 +1,11 @@
 #Provider Block
-provider "aws" {
-  alias = "current"
-}
+# provider "aws" {
+#   alias = "current"
+# }
 
-provider "aws" {
-  alias = "shared"
-}
+# provider "aws" {
+#   alias = "shared"
+# }
 
 #Variables Proper
 variable "cluster_name" {

@@ -1,5 +1,5 @@
 resource "aws_lb" "alb" {
-    provider = aws.current
+    
     name = "alb-${var.cluster_name}" 
     internal = var.internal_loadbalancer
     load_balancer_type = "application"
@@ -14,7 +14,7 @@ resource "aws_lb" "alb" {
 }
 
 resource "aws_lb_target_group" "alb_tg" {
-    provider = aws.current
+    
     name = "ecs-fargate-${var.environment}-tg"
     port = var.container_port
     protocol = "HTTP"
@@ -38,7 +38,7 @@ resource "aws_lb_target_group" "alb_tg" {
 }
 
 resource "aws_lb_listener" "alb_listener" {
-    provider = aws.current
+    
     load_balancer_arn = aws_lb.alb.id
     port = var.app_port
     protocol = "HTTP"   
@@ -51,7 +51,7 @@ resource "aws_lb_listener" "alb_listener" {
 
 resource "aws_alb_listener" "https_listener" {
     count         = var.create_https_listener ? 1 : 0  
-    provider = aws.current
+    
     load_balancer_arn = aws_lb.alb.id
     port = "443"
     protocol = "HTTPS"

@@ -1,9 +1,9 @@
 output vpc_arn {
-  value = aws_vpc.centricity_vpc.arn
+  value = aws_vpc.main.arn
 }
 
 output vpc_id {
-  value = aws_vpc.centricity_vpc.id
+  value = aws_vpc.main.id
 }
 
 output private_subnet_ids {
